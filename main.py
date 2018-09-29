@@ -2,8 +2,10 @@
 # MicroPython ST7735 TFT display driver example usage
 # Used Pin 13,16,17,18,19,23,26 for display
 # Used Pin 22 for dht
+# USed Pin 4 for touch1
+# Used Pin 27,32,33 for LED
 """
-from machine import Pin, SPI, reset
+from machine import Pin, SPI, TouchPad
 from tft import TFT_GREEN
 from font import terminalfont
 import dht
@@ -23,13 +25,20 @@ spi = SPI(1, baudrate=8000000, polarity=1, phase=0, sck=Pin(18), mosi=Pin(23), m
 # TFT object, this is ST7735R green tab version
 tft = TFT_GREEN(128, 128, spi, dc, cs, rst, bl)
 
+#define touchpad
+touch1 = TouchPad(Pin(4))
+touch1.config(300)
+
+#define RGB
+R = Pin(27, Pin.OUT, None)
+G = Pin(32, Pin.OUT, None)
+B = Pin(33, Pin.OUT, None)
 
 
 def get_room_temp():
     d = dht.DHT11(Pin(22))
     d.measure()
     return  d.temperature(),d.humidity()
-
 
 def display():
     # init TFT
@@ -44,9 +53,17 @@ def display():
 
 
 def main():
+    #display() & shut rgbled
+    R.value(1)
+    G.value(1)
+    B.value(1)
     while True:
-        display()
-        time.sleep(10)
+        if touch1.read() < 100 :
+            print(touch1.read())
+            display()
+        else:
+            print(touch1.read())
+
 
         #upload_wx()
         #show_temp()
