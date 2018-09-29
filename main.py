@@ -58,7 +58,7 @@ def main():
     G.value(1)
     B.value(1)
     while True:
-        if touch1.read() < 100 :
+        if touch1.read() < 50 :
             print(touch1.read())
             display()
         else:
