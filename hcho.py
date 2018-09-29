@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 
-import time
+
 import ubinascii
 import urequests as requests
 from machine import UART
