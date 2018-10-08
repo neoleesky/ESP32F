@@ -10,21 +10,22 @@ import display
 #import dht
 import time
 import ubinascii
-from machine import UART, Pin, random, DHT
+from machine import UART, Pin, random, TouchPad
 
 
 #define tft
 tft = display.TFT()
-
-# #define touchpad
-# touch1 = TouchPad(Pin(4))
-# touch1.config(300)
+tft.init(tft.ST7735R, speed=10000000, spihost=tft.HSPI, mosi=23, miso=19, clk=18, cs=26, dc=17, rst_pin=16,
+         backl_pin=13, hastouch=False, bgr=True, width=128, height=128, backl_on=1, rot=tft.PORTRAIT_FLIP, splash=False)
+#define touchpad
+touch1 = TouchPad(Pin(4))
+touch1.config(300)
 
 #DHT11
 def get_room_temp():
-    d = DHT.DHT11(Pin(5))
-    d.measure()
-    return  d.temperature(),d.humidity()
+    dht = machine.DHT(machine.Pin(5), machine.DHT.DHT11)
+    (success, temperature, humidity) = dht.read()
+    return  temperature, humidity
 
 #HCHO
 def get_hcho():
@@ -63,19 +64,18 @@ def get_hcho():
 
 #display result
 def show():
-    tft.init(tft.ST7735R, speed=10000000, spihost=tft.HSPI, mosi=23, miso=19, clk=18, cs=26, dc=17, rst_pin=16,
-             backl_pin=13, hastouch=False, bgr=True, width=128, height=128, backl_on=1, rot=tft.PORTRAIT_FLIP, splash=False)
+    tft.clear()
 
-    #r1 = get_room_temp()
+    r1 = get_room_temp()
     #r2 = get_hcho()
-    r1 = 45,78
+    #r1 = 45,78
     r2 = 30
     temperature = 'TEMP:' + str(r1[0])
     humidity = 'Hum:' + str(r1[1])
     hcho = 'HCHO:' + str(r2)
-    tft.text(5, 50, temperature, machine.random(0xFFFFFF))
-    tft.text(5, 70, humidity,machine.random(0xFFFFFF))
-    tft.text(5, 90, hcho,machine.random(0xFFFFFF))
+    tft.text(5, 50, temperature, tft.WHITE)
+    tft.text(5, 70, humidity,tft.BLUE)
+    tft.text(5, 90, hcho,tft.RED)
 
 
 def main():
