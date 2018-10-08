@@ -16,12 +16,12 @@ ap.active(True)
 wlan = network.WLAN(network.STA_IF)
 wlan.active(True)
 wlan.connect('XiaoPiDan', 'asdfzxcv123')
-time.sleep(3)
+#time.sleep(3)
 if wlan.isconnected() == True:
     print('alread connect')
 else:
     wlan.connect('ZMI_E9C0', '63254450')
-    time.sleep(3)
+#    time.sleep(3)
 
 #set time
 try:
