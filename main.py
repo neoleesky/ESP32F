@@ -29,12 +29,12 @@ touch1.config(300)
 #define UART of hcho
 uart = UART(2, baudrate=9600, bits=8, parity=None, stop=1,rx=0, tx=22, timeout=1000)
 #define UART of GPS
-uartgps = UART(1, rx=27, tx=21, baudrate=9600, bits=8, parity=None, stop=1, timeout=1500, buffer_size=1024,
-                    lineend='\r\n')
+#ugps = UART(1, rx=27, tx=21, baudrate=9600, bits=8, parity=None, stop=1, timeout=1500, buffer_size=1024,
+#                    lineend='\r\n')
 
 
 #DHT11
-def get_room_temp():
+def get_dht():
     dht = DHT(Pin(5), DHT.DHT11)
     (success, temperature, humidity) = dht.read()
     return  temperature, humidity
@@ -75,17 +75,15 @@ def get_hcho():
         return r
 
 #GPS
-def ggps():
-    uart = machine.UART(2, rx=27, tx=21, baudrate=9600, bits=8, parity=None, stop=1, timeout=1500, buffer_size=1024,
-                        lineend='\r\n')
+#def ggps():
+
 
 
 
 #display result
 def show():
     tft.clear()
-
-    r1 = get_room_temp()
+    r1 = get_dht()
     #r2 = get_hcho()
     #r1 = 45,78
     r2 = 30

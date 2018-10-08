@@ -2,7 +2,7 @@
 #import esp
 #esp.osdebug(None)
 import gc
-import webrepl
+#import webrepl
 import network
 import time
 import ntptime
