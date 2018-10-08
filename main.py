@@ -5,10 +5,87 @@ Date:	08/10/2017
 
 """
 
-import machine, display, time, _thread, math
+import machine
+import display
+#import dht
+import time
+import ubinascii
+from machine import UART, Pin, random, DHT
 
+
+#define tft
 tft = display.TFT()
 
+# #define touchpad
+# touch1 = TouchPad(Pin(4))
+# touch1.config(300)
+
+#DHT11
+def get_room_temp():
+    d = DHT.DHT11(Pin(5))
+    d.measure()
+    return  d.temperature(),d.humidity()
+
+#HCHO
+def get_hcho():
+    a = 'ff0178410000000046'
+    b = 'ff0186000000000079'
+    a_bytes = ubinascii.unhexlify(a)  # 传感器改问答式
+    b_bytes = ubinascii.unhexlify(b)  # 询问数值
+    print(a_bytes)
+    print(b_bytes)
+    uart.write(b'\xff\x01xA\x00\x00\x00\x00F')
+    # utime.sleep_ms(1000)
+    uart.write(b'\xff\x01\x86\x00\x00\x00\x00\x00y')
+    if uart.any():
+        q = uart.read(9)
+        #q= uart.readall()
+        print('q')
+        print(q)#获取9个数值
+        qq = ubinascii.hexlify(q)
+        print('qq')#16转str
+        print (qq)
+    #数值切片
+        g = qq[4:6]
+        d = qq[6:8]
+    #16转10
+        gg = int(g,16)
+        dd = int(d,16)
+        print (g)
+        print (d)
+        print (gg)
+        print (dd)
+    #计算最终值
+        r = gg*256 + dd
+
+        print ('result =' + str(r))
+        return r
+
+#display result
+def show():
+    tft.init(tft.ST7735R, speed=10000000, spihost=tft.HSPI, mosi=23, miso=19, clk=18, cs=26, dc=17, rst_pin=16,
+             backl_pin=13, hastouch=False, bgr=True, width=128, height=128, backl_on=1, rot=tft.PORTRAIT_FLIP, splash=False)
+
+    #r1 = get_room_temp()
+    #r2 = get_hcho()
+    r1 = 45,78
+    r2 = 30
+    temperature = 'TEMP:' + str(r1[0])
+    humidity = 'Hum:' + str(r1[1])
+    hcho = 'HCHO:' + str(r2)
+    tft.text(5, 50, temperature, machine.random(0xFFFFFF))
+    tft.text(5, 70, humidity,machine.random(0xFFFFFF))
+    tft.text(5, 90, hcho,machine.random(0xFFFFFF))
+
+
+def main():
+    while True:
+        show()
+        time.sleep(5)
+
+
+if __name__ == '__main__':
+    main()
 # --- Select correct configuration ---
 
 # ESP32-WROVER-KIT v3:
@@ -24,37 +101,37 @@ tft = display.TFT()
 
 # Some others...
 # tft.init(tft.ILI9341, width=240, height=320, miso=19,mosi=23,clk=18,cs=5,dc=26,tcs=27,hastouch=True, bgr=True)
-tft.init(tft.ST7735R, speed=10000000, spihost=tft.HSPI, mosi=23, miso=19, clk=18, cs=26, dc=17, rst_pin=16, backl_pin=13, hastouch=False, bgr=True, width=128, height=128, backl_on=1, invrot=1)
-
-
-def testt():
-    while True:
-        lastx = 0
-        lasty = 0
-        t, x, y = tft.gettouch()
-        if t:
-            dx = abs(x - lastx)
-            dy = abs(y - lasty)
-            if (dx > 2) and (dy > 2):
-                tft.circle(x, y, 4, tft.RED)
-        time.sleep_ms(50)
-
-
-maxx = 128
-maxy = 128
-miny = 0
-touch = False
-
-# fonts used in this demo
-fontnames = (
-    tft.FONT_Default,
-    tft.FONT_7seg,
-    tft.FONT_Ubuntu,
-    tft.FONT_Comic,
-    tft.FONT_Tooney,
-    tft.FONT_Minya
-)
-tft.text(5, 5, "aaaa/", machine.random(0xFFFFFF))
+# tft.init(tft.ST7735R, speed=10000000, spihost=tft.HSPI, mosi=23, miso=19, clk=18, cs=26, dc=17, rst_pin=16, backl_pin=13, hastouch=False, bgr=True, width=128, height=128, backl_on=1, invrot=1)
+#
+#
+# def testt():
+#     while True:
+#         lastx = 0
+#         lasty = 0
+#         t, x, y = tft.gettouch()
+#         if t:
+#             dx = abs(x - lastx)
+#             dy = abs(y - lasty)
+#             if (dx > 2) and (dy > 2):
+#                 tft.circle(x, y, 4, tft.RED)
+#         time.sleep_ms(50)
+#
+#
+# maxx = 128
+# maxy = 128
+# miny = 0
+# touch = False
+#
+# # fonts used in this demo
+# fontnames = (
+#     tft.FONT_Default,
+#     tft.FONT_7seg,
+#     tft.FONT_Ubuntu,
+#     tft.FONT_Comic,
+#     tft.FONT_Tooney,
+#     tft.FONT_Minya
+# )
+# tft.text(5, 5, "aaaa/", machine.random(0xFFFFFF))
 
 # # Check if the display is touched
 # # -------------
