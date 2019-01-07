@@ -44,7 +44,7 @@ rtc.datetime((year, month, mday, 0, hour, minute, second, 0))
 
 
 #webrepl
-webrepl.start()
+#webrepl.start()
 
 
 #gc
