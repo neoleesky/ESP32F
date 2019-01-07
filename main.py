@@ -14,6 +14,11 @@ import gsm
 from machine import UART, Pin, random, TouchPad
 import ujson as json
 import urequests
+import time
+#import ntptime
+import machine
+import utime
+
 
 #onenet api配置
 api_url='http://api.heclouds.com'
@@ -35,7 +40,7 @@ touch1.config(300)
 #define UART of GPS
 # #uart = UART(2, rx=0, tx=22, baudrate=9600, bits=8, parity=None, stop=1, timeout=1500, buffer_size=1024,
 #                    lineend='\r\n')
-gsm.start(tx=27, rx=21, apn='ctnet', user='')
+gsm.start(tx=27, rx=21, apn='ctnet', connect = True)
 
 #gps = GPS(uart)
 
@@ -65,12 +70,29 @@ gsm.start(tx=27, rx=21, apn='ctnet', user='')
 #     print ("status_code:",res.status_code)
 
 
-def main():
-    while True:
-        show()
-        upload_onenet()
-        time.sleep(10)
+# def main():
+#     while True:
+#         show()
+#         upload_onenet()
+#         time.sleep(10)
+#
+#
+# if __name__ == '__main__':
+#     main()
 
-
-if __name__ == '__main__':
-    main()
+try:
+    ntptime.settime()
+except:
+    pass
+rtc = machine.RTC()
+# for time convert to second
+tampon1 = utime.time()
+# for gmt. For me gmt+3.
+# 1 hour = 3600 seconds
+# 3 hours = 10800 seconds
+tampon2 = tampon1 + 28800
+# for second to convert time
+(year, month, mday, hour, minute, second, weekday, yearday) = utime.localtime(tampon2)
+# first 0 = week of year
+# second 0 = milisecond
+rtc.datetime((year, month, mday, 0, hour, minute, second, 0))
