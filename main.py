@@ -5,12 +5,13 @@ Date:	08/10/2017
 # Used Pin 13,16,17,18,19,23,26 for display
 # USed Pin 4 for touch1
 # Used Pin  0, 22 for Uart2 GPS
-# Used Pin ?? ?? for UART1 GPS
+# Used Pin 27,2 for UART1 GSM
 """
 
 import display
 import time
-from machine import UART, Pin, random, TouchPad, GPS
+import gsm
+from machine import UART, Pin, random, TouchPad
 import ujson as json
 import urequests
 
@@ -32,35 +33,36 @@ touch1.config(300)
 #define UART of hcho
 #uart = UART(2, baudrate=9600, bits=8, parity=None, stop=1,rx=0, tx=22, timeout=1000)
 #define UART of GPS
-uart = UART(2, rx=0, tx=22, baudrate=9600, bits=8, parity=None, stop=1, timeout=1500, buffer_size=1024,
-                   lineend='\r\n')
+# #uart = UART(2, rx=0, tx=22, baudrate=9600, bits=8, parity=None, stop=1, timeout=1500, buffer_size=1024,
+#                    lineend='\r\n')
+gsm.start(tx=27, rx=21, apn='ctnet', user='')
 
-gps = GPS(uart)
+#gps = GPS(uart)
 
 
 #display result
-def show():
-    tft.clear()
-    gps.startservice()
-    r = gps.getdata()
-    latitude = 'La:' + str(r[1])+ ' N'
-    longitude = 'Lo:' + str(r[2])+ ' E'
-    altitude = 'Al:' + str(r[3])+ ' M'
-    tft.text(5, 20, latitude, tft.WHITE)
-    tft.text(5, 40, longitude,tft.BLUE)
-    tft.text(5, 60, altitude,tft.RED)
-
-def upload_onenet():
-    url=r'%s/devices/%s/datapoints?type=4' % (api_url,device_id)
-    strftime= "%04u-%02u-%02uT%02u:%02u:%02u" % time.localtime()[0:6]
-    print ("time:",strftime)
-    l = gps.getdata()
-    lon = str(l[1])
-    lat = str(l[2])
-    data={"lon":{strftime:lon},"lat":{strftime:lat}}
-    print (json.dumps(data))
-    res = urequests.post(url,headers=api_headers,data=json.dumps(data))
-    print ("status_code:",res.status_code)
+#def show():
+    # tft.clear()
+    # gps.startservice()
+    # r = gps.getdata()
+    # latitude = 'La:' + str(r[1])+ ' N'
+    # longitude = 'Lo:' + str(r[2])+ ' E'
+    # altitude = 'Al:' + str(r[3])+ ' M'
+    # tft.text(5, 20, latitude, tft.WHITE)
+    # tft.text(5, 40, longitude,tft.BLUE)
+    # tft.text(5, 60, altitude,tft.RED)
+#
+# def upload_onenet():
+#     url=r'%s/devices/%s/datapoints?type=4' % (api_url,device_id)
+#     strftime= "%04u-%02u-%02uT%02u:%02u:%02u" % time.localtime()[0:6]
+#     print ("time:",strftime)
+#     l = gps.getdata()
+#     lon = str(l[1])
+#     lat = str(l[2])
+#     data={"lon":{strftime:lon},"lat":{strftime:lat}}
+#     print (json.dumps(data))
+#     res = urequests.post(url,headers=api_headers,data=json.dumps(data))
+#     print ("status_code:",res.status_code)
 
 
 def main():
