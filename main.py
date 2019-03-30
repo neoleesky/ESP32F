@@ -70,29 +70,13 @@ gsm.start(tx=27, rx=21, apn='ctnet', connect = True)
 #     print ("status_code:",res.status_code)
 
 
-# def main():
-#     while True:
-#         show()
-#         upload_onenet()
-#         time.sleep(10)
-#
-#
-# if __name__ == '__main__':
-#     main()
+def main():
+    while True:
+        show()
+        upload_onenet()
+        time.sleep(10)
 
-try:
-    ntptime.settime()
-except:
-    pass
-rtc = machine.RTC()
-# for time convert to second
-tampon1 = utime.time()
-# for gmt. For me gmt+3.
-# 1 hour = 3600 seconds
-# 3 hours = 10800 seconds
-tampon2 = tampon1 + 28800
-# for second to convert time
-(year, month, mday, hour, minute, second, weekday, yearday) = utime.localtime(tampon2)
-# first 0 = week of year
-# second 0 = milisecond
-rtc.datetime((year, month, mday, 0, hour, minute, second, 0))
+
+if __name__ == '__main__':
+    main()
+
