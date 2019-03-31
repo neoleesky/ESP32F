@@ -1,21 +1,23 @@
 # This file is executed on every boot (including wake-boot from deepsleep)
 #import esp
 #esp.osdebug(None)
-##test
+
 import gc
-#import webrepl
 import network
 import time
 #import ntptime
 import machine
 import utime
+import gsm
+
+#
+# ap = network.WLAN(network.AP_IF) # create access-point interface
+# ap.config(essid='ESP32F') # set the ESSID of the access point
+# ap.active(True)         # activate the interface
 
 
-set wlan
-ap = network.WLAN(network.AP_IF)
-ap.active(True)
-
-
+#gsm.start(tx=27, rx=21, apn='ctnet', connect = True)
+gsm.start(tx=27, rx=21, apn='ctnet')
 
 # wlan = network.WLAN(network.STA_IF)
 # wlan.active(True)
@@ -26,7 +28,7 @@ ap.active(True)
 #     print('alread connect')
 # else:
 #     wlan.connect('ZMI_E9C0', '63254450')
-#    time.sleep(3)
+#     time.sleep(3)
 
 #set time
 rtc = machine.RTC()

@@ -18,29 +18,38 @@ import time
 #import ntptime
 import machine
 import utime
+from simple import MQTTClient
 
+# #onenet api配置
+# api_url='http://api.heclouds.com'
+# api_key='LAWZJ=Rs=NE2Ghj=lN==BgSQ7w0=' #请填入专属的api key
+# api_headers={'api-key':api_key,'content-type': 'application/json'}
+# device_id=46814719
 
-#onenet api配置
-api_url='http://api.heclouds.com'
-api_key='LAWZJ=Rs=NE2Ghj=lN==BgSQ7w0=' #请填入专属的api key
-api_headers={'api-key':api_key,'content-type': 'application/json'}
-device_id=46814719
+#mqtt 配置
+SERVER = "183.230.40.39"
+CLIENT_ID = "521190191"
+TOPIC = b"ttt"
+username='173816'
+password='esp32f'
+state = 0
+
 
 #define tft
-tft = display.TFT()
-tft.init(tft.ST7735R, speed=10000000, spihost=tft.HSPI, mosi=23, miso=19, clk=18, cs=26, dc=17, rst_pin=16,
-         backl_pin=13, hastouch=False, bgr=True, width=128, height=128, backl_on=1, rot=tft.PORTRAIT_FLIP, splash=False)
-tft.font(tft.FONT_Ubuntu)
-#define touchpad
-touch1 = TouchPad(Pin(4))
-touch1.config(300)
+# tft = display.TFT()
+# tft.init(tft.ST7735R, speed=10000000, spihost=tft.HSPI, mosi=23, miso=19, clk=18, cs=26, dc=17, rst_pin=16,
+#          backl_pin=13, hastouch=False, bgr=True, width=128, height=128, backl_on=1, rot=tft.PORTRAIT_FLIP, splash=False)
+# tft.font(tft.FONT_Ubuntu)
+# #define touchpad
+# touch1 = TouchPad(Pin(4))
+# touch1.config(300)
 
 #define UART of hcho
 #uart = UART(2, baudrate=9600, bits=8, parity=None, stop=1,rx=0, tx=22, timeout=1000)
 #define UART of GPS
 # #uart = UART(2, rx=0, tx=22, baudrate=9600, bits=8, parity=None, stop=1, timeout=1500, buffer_size=1024,
 #                    lineend='\r\n')
-gsm.start(tx=27, rx=21, apn='ctnet', connect = True)
+# gsm.start(tx=27, rx=21, apn='ctnet', connect = True)
 
 #gps = GPS(uart)
 
@@ -70,29 +79,22 @@ gsm.start(tx=27, rx=21, apn='ctnet', connect = True)
 #     print ("status_code:",res.status_code)
 
 
-# def main():
-#     while True:
-#         show()
-#         upload_onenet()
-#         time.sleep(10)
-#
-#
-# if __name__ == '__main__':
-#     main()
 
-try:
-    ntptime.settime()
-except:
-    pass
-rtc = machine.RTC()
-# for time convert to second
-tampon1 = utime.time()
-# for gmt. For me gmt+3.
-# 1 hour = 3600 seconds
-# 3 hours = 10800 seconds
-tampon2 = tampon1 + 28800
-# for second to convert time
-(year, month, mday, hour, minute, second, weekday, yearday) = utime.localtime(tampon2)
-# first 0 = week of year
-# second 0 = milisecond
-rtc.datetime((year, month, mday, 0, hour, minute, second, 0))
+#mqtt上传到onenet
+def mqtt_onenet(server=SERVER):
+    c = MQTTClient(CLIENT_ID, server, 6002, username, password)
+    strftime = "%04u-%02u-%02uT%02u:%02u:%02u" % time.localtime()[0:6]
+    msg1 = b'Hello #%s' % (strftime)
+    c.connect()
+    c.publish(b"ttt",msg1)
+    c.disconnect()
+
+def main():
+    while True:
+        mqtt_onenet()
+        time.sleep(3)
+
+
+if __name__ == '__main__':
+    main()
+

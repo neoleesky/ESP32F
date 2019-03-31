@@ -37,7 +37,7 @@ while True:
         g = qq[8:10]
         d = qq[10:12]
     #16转10
-        gg = int(g,16)
+        gg = int(g,16)gm
         dd = int(d,16)
         print (g)
         print (d)
