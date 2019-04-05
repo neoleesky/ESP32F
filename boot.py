@@ -2,9 +2,13 @@
 #import esp
 #esp.osdebug(None)
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
 >>>>>>> parent of 96a54ad... Dev
+=======
+#hello tecent
+>>>>>>> 96a54ad87c10098567ebab102d8b4b91bfc15614
 import gc
 import network
 import time
