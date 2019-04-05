@@ -1,6 +1,7 @@
 # This file is executed on every boot (including wake-boot from deepsleep)
 #import esp
 #esp.osdebug(None)
+<<<<<<< Updated upstream
 <<<<<<< HEAD
 <<<<<<< HEAD
 
@@ -9,6 +10,9 @@
 =======
 #hello tecent
 >>>>>>> 96a54ad87c10098567ebab102d8b4b91bfc15614
+=======
+##test
+>>>>>>> Stashed changes
 import gc
 import network
 import time
