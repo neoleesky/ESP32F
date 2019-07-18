@@ -17,12 +17,15 @@ wlan = network.WLAN(network.STA_IF)
 wlan.active(True)
 #time.sleep(2)
 wlan.connect('XiaoPiDan', 'asdfzxcv123')
-time.sleep(3)
+time.sleep(1)
 if wlan.isconnected() == True:
     print('alread connect')
 else:
     wlan.connect('ZMI_E9C0', '63254450')
-#    time.sleep(3)
+    time.sleep(1)
+    if wlan.isconnected() == True:
+        print('alread connect')
+
 
 # #set time
 # rtc = machine.RTC()
@@ -30,10 +33,10 @@ else:
 # rtc.synced()
 # utime.gmtime()
 # print("Time set:", utime.strftime("%c"))
-# try:
-#     ntptime.settime()
-# except:
-#     pass
+try:
+    ntptime.settime()
+except:
+    pass
 rtc = machine.RTC()
 # for time convert to second
 tampon1 = utime.time()
@@ -48,9 +51,9 @@ tampon2 = tampon1 + 28800
 rtc.datetime((year, month, mday, 0, hour, minute, second, 0))
 
 
-
 #webrepl
 #webrepl.start()
+
 
 
 #gc
