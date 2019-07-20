@@ -15,14 +15,14 @@ import utime
 #ap.active(True)
 wlan = network.WLAN(network.STA_IF)
 wlan.active(True)
-#time.sleep(2)
-wlan.connect('XiaoPiDan', 'asdfzxcv123')
-time.sleep(1)
+# time.sleep(1)
+wlan.connect('XiaoPiDan1', 'asdfzxcv123')
+time.sleep(2)
 if wlan.isconnected() == True:
     print('alread connect')
 else:
     wlan.connect('ZMI_E9C0', '63254450')
-    time.sleep(1)
+    time.sleep(2)
     if wlan.isconnected() == True:
         print('alread connect')
 
